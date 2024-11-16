@@ -52,7 +52,7 @@ function loadAllData() {
         }
         currentPickaxe = data[1][0][1];
     
-        totalMined = data[2]
+        totalMined = data[2][0];
         document.getElementById("blocksMined").innerHTML = totalMined.toLocaleString() + " Blocks Mined";
         
         for (var propertyName in oreList) {
