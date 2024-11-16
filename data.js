@@ -1,5 +1,4 @@
 function saveAllData() {
-    localStorage.setItem("game2DataChanges", true);
     let dataStorage = [
         //ORES, 0
         [],
@@ -41,6 +40,7 @@ function loadAllData() {
     localStorage.setItem("dataBackup", localStorage.getItem("sillyCavernsAnniversaryPlayerData"));
     try {
         let data = JSON.parse(localStorage.getItem("sillyCavernsAnniversaryPlayerData"));
+        if (data === null) {localStorage.removeItem("dataBackup"); return true;}
         for (let i = 0; i < data[0].length; i++) {
             if (oreList[data[0][i][0]] != undefined) {
                 oreList[data[0][i][0]][1] = data[0][i][1][0];

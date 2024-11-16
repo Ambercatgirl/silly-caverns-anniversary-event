@@ -572,15 +572,9 @@ function init () {
     createIndex();
     createMine();
     let playedBefore = localStorage.getItem("playedBefore");
-    if (playedBefore) {
-        canContinue = loadAllData();
-    } else {
-        canContinue = true;
-    }
+    canContinue = loadAllData();
     if (canContinue) {
         repeatDataSave();
-        localStorage.setItem("playedBefore", true);
-        localStorage.setItem("game2DataChanges", true);
         createPickaxeRecipes();
         createGearRecipes();
         document.getElementById('dataText').value = "";
