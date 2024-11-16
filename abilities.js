@@ -82,7 +82,7 @@ function pickaxeAbility1(x, y, size, customLuck, boost) {
     let constraints = getParams(size, size);
     for (let r = y - constraints[1]; r <= y + size; r++) {
         for (let c = x - constraints[0]; c <= x + size; c++) {
-            if (mine[r][c] == "⬜") {
+            if (mine[r][c] == undefined) {
                 generated = generateBlock(thisLuck, [r, c]);
                         mine[r][c] = generated[0];
                 if (generated[1]) {
@@ -198,7 +198,7 @@ function pickaxeAbility5(x, y, boost) {
         let r = y + area2;
         let c = x + area1 + 1;
         for (let i = c; i < c + 5; i++) {
-            if (mine[r][i] == "⬜") {
+            if (mine[r][i] == undefined) {
                 generated = generateBlock(thisLuck, [r, i]);
                         mine[r][i] = generated[0];
                 if (generated[1]) {
@@ -212,7 +212,7 @@ function pickaxeAbility5(x, y, boost) {
         r++;
         for (let i = 0; i < 5; i++) {
             for (let j = c - 1; j < c+6; j++) {
-                if (mine[r][j] == "⬜") {
+                if (mine[r][j] == undefined) {
                     generated = generateBlock(thisLuck, [r, j]);
                         mine[r][j] = generated[0];
                     if (generated[1]) {
@@ -226,7 +226,7 @@ function pickaxeAbility5(x, y, boost) {
             r++;
         }
         for (let i = c; i < c + 5; i++) {
-            if (mine[r][i] == "⬜") {
+            if (mine[r][i] == undefined) {
                 generated = generateBlock(thisLuck, [r, i]);
                 mine[r][i] = generated[0];
                 if (generated[1]) {
@@ -253,7 +253,7 @@ function pickaxeAbility6(x, y, boost) {
         for (let r = y + 6; r >= y - constraints[1]; r--) {
             for (let c = x - dist; c <= x + dist; c++) {
                 if (c >= x - constraints[0]) {
-                    if (mine[r][c] == "⬜") {
+                    if (mine[r][c] == undefined) {
                         generated = generateBlock(thisLuck, [r, c]);
                         mine[r][c] = generated[0];
                         if (generated[1]) {
@@ -282,7 +282,7 @@ function pickaxeAbility7(x, y, boost) {
         for (let r = y - constraints[1]; r < y; r++) {
             for (let c = x - constraints[0]; c < x + 5; c++) {
                 if (reps != 4 && reps != 6) {
-                    if (mine[r][c] == "⬜") {
+                    if (mine[r][c] == undefined) {
                         generated = generateBlock(thisLuck, [r, c]);
                         mine[r][c] = generated[0];
                         if (generated[1]) {
@@ -301,7 +301,7 @@ function pickaxeAbility7(x, y, boost) {
         for (let r = y; r < y+4; r++) {
             for (let c = x - dist; c <= x + dist; c++) {
                 if (c >= x - constraints[0]) {
-                    if (mine[r][c] == "⬜") {
+                    if (mine[r][c] == undefined) {
                         generated = generateBlock(thisLuck, [r, c]);
                         mine[r][c] = generated[0];
                         if (generated[1]) {
@@ -477,7 +477,7 @@ function pickaxeAbility10(x, y, boost) {
         for (let r = y - 8; r < y + 9; r++) {
             if (mine[r] != undefined && mine[r][c] != undefined) {
                 if (!(skips[reps].includes(i))) {
-                    if (mine[r][c] == "⬜") {
+                    if (mine[r][c] == undefined) {
                         generated = generateBlock(thisLuck, [r, c]);
                         mine[r][c] = generated[0];
                         if (generated[1]) {
@@ -500,7 +500,7 @@ function pickaxeAbility10(x, y, boost) {
         for (let c = x - 8; c < x + 9; c++) {
             if (mine[r] != undefined && mine[r][c] != undefined) {
                 if (!(skips[reps].includes(i))) {
-                    if (mine[r][c] == "⬜") {
+                    if (mine[r][c] == undefined) {
                         generated = generateBlock(thisLuck, [r, c]);
                         mine[r][c] = generated[0];
                         if (generated[1]) {
@@ -533,7 +533,7 @@ function pickaxeAbility11(x, y, boost) {
                         for (let r = 7 * j; r < (7 * j + 7); r++) {
                             for (let c = 7 * i; c < (7 * i + 7); c++) {
                                 if (mine[y + r] != undefined) {
-                                    if (mine[y + r][x + c] == "⬜") {
+                                    if (mine[y + r][x + c] == undefined) {
                                         generated = generateBlock(thisLuck, [y + r, x + c]);
                                         mine[y + r][x + c] = generated[0];
                                         if (generated[1]) {

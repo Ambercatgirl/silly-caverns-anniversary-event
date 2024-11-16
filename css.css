@@ -3,8 +3,6 @@
 .emoji {
     font-family: 'Noto Color Emoji', sans-serif;
   }
-
-
 .inventoryDisplay {
     border-style: solid;
     border-color: black;
@@ -60,6 +58,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #1a1a1a;
 }
 
 #blockDisplay {
@@ -67,4 +66,18 @@
 }
 #resetMine {
     width:50%
+}
+#mainContent {
+    background-color: #1a1a1a;
+    height: 100%;
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    color: white!important;
+}
+button {
+    border: 0.1vw solid white;
+    background-color: #1a1a1a;
+    color: white;
 }

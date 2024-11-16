@@ -19,6 +19,11 @@ function saveAllData() {
     }
     dataStorage[1].push([pickaxes, currentPickaxe]);
     dataStorage[2].push(totalMined)
+    const aData = localStorage.getItem("sillyCavernsAnniversaryData");
+    if (aData !== null) dataStorage[3].push(JSON.parse(aData))
+    else {
+        localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify({sf: false, p8: false}));
+    }
     dataStorage[4].push(gears);
     localStorage.setItem("sillyCavernsAnniversaryPlayerData", JSON.stringify(dataStorage));
 }
@@ -26,7 +31,7 @@ function saveAllData() {
 function loadAllData() {
     localStorage.setItem("dataBackup", localStorage.getItem("sillyCavernsAnniversaryPlayerData"));
     try {
-        let data = JSON.parse(localStorage.getItem("playerData"));
+        let data = JSON.parse(localStorage.getItem("sillyCavernsAnniversaryPlayerData"));
         for (let i = 0; i < data[0].length; i++) {
             if (oreList[data[0][i][0]] != undefined) {
                 oreList[data[0][i][0]][1] = data[0][i][1][0];
@@ -56,6 +61,7 @@ function loadAllData() {
                 gears[i] = data[4][0][i];
             }
         }
+        if (data[3][0]) localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify(data[3][0]));
         localStorage.removeItem("dataBackup");
         return true;
     } catch(error) {

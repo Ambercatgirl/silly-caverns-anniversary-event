@@ -19,9 +19,7 @@ class secureLogs {
         let maxLuck = (this.#maxLuck[currentPickaxe] * luckModifier) + 1;
         console.log(luck, maxLuck)
         if (obj.stack.includes("main.js") && luck <= maxLuck) {
-            if (mine[r][c] == "⬜") {
-                this.#spawnLogs.push([r, c, intended, luck]);
-            }
+            this.#spawnLogs.push([r, c, intended, luck]);
         } 
     }
     verifyLog(r, c) {
@@ -93,7 +91,7 @@ let currentDisplay = ""
 let facing = "down";
 let totalMined = 0;
 let blocksRevealedThisReset = 0;
-let mineCapacity = 40000; // in case this ever needs to be raised
+let mineCapacity = 250000; // in case this ever needs to be raised
 let canMine = false;
 let lastDirection = "";
 let pickaxes = [
@@ -590,17 +588,7 @@ function init () {
     }
 }
 function createMine() {
-    for (let r = curY; r < curY + 51; r++) {
-        mine.push([]);
-        for (let c = curX - 51; c < curX + 51; c++) {
-            if (r == 0) {
-                mine[r][c] = "🟩";
-            } else {
-                mine[r][c] = "⬜";
-            }
-            
-        }
-    }
+    mine[0] = [];
     mine[0][1000000000] = "⛏️";
     displayArea();
     checkAllAround(curX, curY, 1);
@@ -612,7 +600,6 @@ function movePlayer(dir) {
             case "s":
                     mineBlock(curX, curY + 1, "mining", 1);
                     mine[curY][curX] = "⚪"
-                    prepareArea("s");
                     curY++; 
                     mine[curY][curX] = "⛏️";
                     setLayer(curY);
@@ -622,7 +609,6 @@ function movePlayer(dir) {
                 if (curY > 0) {
                     mineBlock(curX, curY - 1, "mining", 1);
                     mine[curY][curX] = "⚪"
-                    prepareArea("w");
                     curY--; 
                     mine[curY][curX] = "⛏️";
                     lastDirection = "w";
@@ -633,7 +619,6 @@ function movePlayer(dir) {
                 if (curX > 0) {
                     mineBlock(curX - 1, curY, "mining", 1);
                     mine[curY][curX] = "⚪"
-                    prepareArea("a");
                     curX--; 
                     mine[curY][curX] = "⛏️";
                     if (curX < furthestLeft) {
@@ -645,7 +630,6 @@ function movePlayer(dir) {
             case "d":
                 mineBlock(curX + 1, curY, "mining", 1);
                 mine[curY][curX] = "⚪"
-                prepareArea("d");
                 curX++; 
                 mine[curY][curX] = "⛏️";
                     if (curX > furthestRight) {
@@ -662,7 +646,7 @@ function movePlayer(dir) {
 }
 
 function mineBlock(x, y, cause, luck) {
-    if (mine[y][x] != "⚪" && mine[y][x] != "⛏️" && mine[y][x] != "⬜")  {
+    if (mine[y][x] != "⚪" && mine[y][x] != "⛏️")  {
         let ore = mine[y][x];
         if (ore == "🟩") {
             ore = "🟫";
@@ -729,72 +713,14 @@ document.addEventListener('keydown', (event) => {
         movePlayer(name)
     }
   }, false);
-
-function prepareArea(facing) {
-   let constraints = getParams(50, 50);
-   switch(facing) {
-    case "a":
-        for (let r = curY - constraints[1]; r < curY + 50; r++) {
-            if (mine[r] == undefined) {
-                mine[r] = [];
-            }
-            if (mine[r][curX - constraints[0]] == undefined) {
-                if (r == 0) {
-                    mine[r][curX - constraints[0]] = "🟩";
-                } else {
-                    mine[r][curX - constraints[0]] = "⬜";
-                }
-            }
-        }
-        break;
-    case "s":
-        if (mine[curY + 50] == undefined) {
-            mine[curY + 50] = [];
-        }
-        for (let c = curX - constraints[0]; c < curX + 50; c++) {
-            if (mine[curY + 50][c] == undefined) {
-                mine[curY + 50][c] = "⬜"
-            }
-        }
-        break;
-    case "d":
-        for (let r = curY - constraints[1]; r < curY + 50; r++) {
-            if (mine[r] == undefined) {
-                mine[r] = [];
-            }
-            if (mine[r][curX + 50] == undefined) {
-                if (r == 0) {
-                    mine[r][curX + 50] = "🟩";
-                } else {
-                    mine[r][curX + 50] = "⬜";
-                }
-                
-            }
-        }
-        break;
-    case "w":
-        if (mine[curY - constraints[1]] == undefined) {
-            mine[curY - constraints[1]] = [];
-        }
-        for (let c = curX - constraints[0]; c < curX + 50; c++) {
-            if (mine[curY - constraints[1]][c] == undefined) {
-                if (curY - constraints[1] == 0) {
-                    mine[curY - constraints[1]][c] = "🟩";
-                } else {
-                    mine[curY - constraints[1]][c] = "⬜";
-                }
-            }
-        }
-        break;
-   }
-        
-}
 function displayArea() {
     let output ="";
     let constraints = getParams(9, 9); 
     for (let r = curY - constraints[1]; r <= curY + 9 + (9-constraints[1]); r++) {
+        mine[r] ??= [];
         for (let c = curX - constraints[0]; c <= curX + 9 + (9-constraints[0]); c++) {
-            output += mine[r][c];
+            if (mine[r][c]) output += mine[r][c];
+            else output += r === 0 ? "🟩" : "⬛";
         }
         output += "<br>";
     }
@@ -828,8 +754,9 @@ function displayArea() {
 
   function checkAllAround(x, y, luck) {
         let generated;
+        mine[y] ??= [];
         if (x - 1 >= 0) {
-            if (mine[y][x - 1] == "⬜") {
+            if (mine[y][x - 1] === undefined) {
                 generated = generateBlock(luck, [y, x-1]);
                 mine[y][x - 1] = generated[0];
                 if (generated[1]) {
@@ -838,15 +765,16 @@ function displayArea() {
                 blocksRevealedThisReset++;
             }
         }
-        if (mine[y][x + 1] == "⬜") {
+        if (mine[y][x + 1] === undefined) {
             generated = generateBlock(luck, [y, x+1]);
                 mine[y][x + 1] = generated[0];
                 if (generated[1]) {
                     verifiedOres.verifyLog(y, x+1);
                 }
                 blocksRevealedThisReset++;
-            }
-        if (mine[y + 1][x] == "⬜") {
+        }
+        mine[y + 1] ??= [];
+        if (mine[y + 1][x] === undefined) {
             generated = generateBlock(luck, [y+1, x]);
                 mine[y + 1][x] = generated[0];
                 if (generated[1]) {
@@ -854,25 +782,21 @@ function displayArea() {
                 }
                 blocksRevealedThisReset++;
             }
-        
+            mine[y - 1] ??= [];
         if (y - 1 >= 0) {
-            if (mine[y - 1][x] == "⬜") {
+            if (mine[y - 1][x] === undefined) {
                 generated = generateBlock(luck, [y-1, x]);
                 mine[y - 1][x] = generated[0];
                 if (generated[1]) {
                     verifiedOres.verifyLog(y-1, x);
                 }
                 blocksRevealedThisReset++;
+                if (gears[3] && oreList[generated[0]][0] < 1/749999) mineBlock(x, y-1, "ability", 1) 
             }
         }
 
     if (blocksRevealedThisReset >= mineCapacity) {
-        clearInterval(loopTimer);
         blocksRevealedThisReset = 0;
-        canMine = false;
-        setTimeout(() => {
-            mineReset();
-            }, 250);
     }
   }
 
@@ -929,6 +853,7 @@ function generateBlock(luck, location) {
         }
         }
         if (Math.round(1 / (probabilityTable[blockToGive])) >= 750000) {
+            console.log(blockToGive, oreList[blockToGive][1])
             if (Math.round(1 / (probabilityTable[blockToGive])) > 5000000000) {
                 verifiedOres.createLog(location[0],location[1],blockToGive, new Error(), luck);
                 hasLog = true;
@@ -964,7 +889,6 @@ function generateBlock(luck, location) {
                 }
             }
         }
-        
         return [blockToGive, hasLog];
 }
 let variant = 1;
@@ -1162,7 +1086,6 @@ function showIndex() {
     }
 }
 let spawnOre;
-let loggedFinds = [];
 let latestSpawns = [];
 function spawnMessage(block, location) {
     if (!(gears[3])) {
@@ -1188,9 +1111,6 @@ function spawnMessage(block, location) {
         } 
     } else {
         addToLatest = false;
-    }
-    if (gears[3]) {
-        loggedFinds.push([location[0], location[1]]);
     }
     if (latestSpawns.length > 10) {
         latestSpawns.splice(0, 1);
@@ -1228,113 +1148,15 @@ function moveOne(dir, button) {
     }, 100);
 }
 
-async function mineReset() {
+function mineReset() {
     mineCapacity = 40000;
     let temp = curDirection;
     curDirection = "";
-    let temp2 = await collectOres(temp);
-    loggedFinds = [];
-    canMine = await mineResetAid();
+    mine = []
     checkAllAround(curX, curY, 1);
     mine[curY][curX] = "⛏️"
     displayArea();
     goDirection(temp);
-}
-function collectOres(temp) {
-    return new Promise((resolve) => {
-        if (gears[3]) {
-            for (let i = 0; i < loggedFinds.length; i++) {
-                if (mine[loggedFinds[i][0]] != undefined && mine[loggedFinds[i][0]][loggedFinds[i][1]] != undefined) {
-                    mineBlock(loggedFinds[i][1], loggedFinds[i][0], "reset", 1);
-                }
-            }
-        } else {
-            let direction = "";
-            if (temp != "") {
-                direction = temp;
-            } else if (lastDirection != "") {
-                direction = lastDirection;
-            }
-            if (direction == "s") {
-                let constraints = getParams(30, 250);
-                for (let r = curY - constraints[1]; r < curY + 30; r++) {
-                    for (let c = curX - constraints[0]; c < curX + 30; c++) {
-                        if (mine[r] != undefined) {
-                            if (oreList[mine[r][c]] != undefined) {
-                                if (Math.round(1 / (oreList[mine[r][c]][0])) >= 750000) {
-                                    mineBlock(c, r, "reset", 1);
-                                }
-                            }
-                        }
-                    }
-                }
-            } else if (direction == "w") {
-                let constraints = getParams(30, 30);
-                for (let r = curY - constraints[1]; r < curY + 250; r++) {
-                    for (let c = curX - constraints[0]; c < curX + 30; c++) {
-                        if (mine[r] != undefined) {
-                            if (oreList[mine[r][c]] != undefined) {
-                                if (Math.round(1 / (oreList[mine[r][c]][0])) >= 750000) {
-                                    mineBlock(c, r, "reset", 1);
-                                }
-                            }
-                        }
-                    }
-                }
-            } else if (direction == "a") {
-                let constraints = getParams(30, 30);
-                for (let r = curY - constraints[1]; r < curY + 30; r++) {
-                    for (let c = curX - constraints[0]; c < curX + 250; c++) {
-                        if (mine[r] != undefined) {
-                            if (oreList[mine[r][c]] != undefined) {
-                                if (Math.round(1 / (oreList[mine[r][c]][0])) >= 750000) {
-                                    mineBlock(c, r, "reset", 1);
-                                }
-                            }
-                        }
-                    }
-                }
-            } else if (direction == "d") {
-                let constraints = getParams(250, 30);
-                for (let r = curY - constraints[1]; r < curY + 30; r++) {
-                    for (let c = curX - constraints[0]; c < curX + 30; c++) {
-                        if (mine[r] != undefined) {
-                            if (oreList[mine[r][c]] != undefined) {
-                                if (Math.round(1 / (oreList[mine[r][c]][0])) >= 750000) {
-                                    mineBlock(c, r, "reset", 1);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        setTimeout(() => {
-        resolve(true);
-        }, 125);
-        });
-}
-function mineResetAid() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            mine = [[]];
-            curX = 1000000000;
-            let x = 1000000000;
-            let y = curY;
-            for (let r = y - 50; r < y + 50; r++) {
-                if(mine[r] == undefined) {
-                    mine[r] = [];
-                }
-                for (let c = x - 50; c < x + 50; c++) {
-                    mine[r][c] = "⬜";
-                }
-            }    
-            checkAllAround(curX, curY, 1);
-        }, 125);
-        setTimeout(() => {
-        resolve(true);
-        }, 250);
-        });
 }
 let latestFinds = [];
 function logFind(type, x, y, variant, atMined, fromReset) {
@@ -1375,39 +1197,22 @@ function setLayer(y) {
 }
 
 async function teleport() {
-    canMine = false;
     clearInterval(loopTimer);
     curDirection = "";
-    canMine = await toLocation();
+    toLocation();
     displayArea();
 }
 
 function toLocation() {
-    return new Promise((resolve) => {
     let x = curX;
     let y = document.getElementById("meterDisplay").innerHTML;
-    y = Number(y.substring(0, y.length - 1));
-    for (let r = y - 50; r < y + 50; r++) {
-        if(mine[r] == undefined) {
-            mine[r] = [];
-        }
-        for (let c = x - 50; c < x + 50; c++) {
-            if (mine[r][c] == undefined) {
-                mine[r][c] = "⬜";
-            }
-        }
-    }    
+    y = Number(y.substring(0, y.length - 1));  
     setLayer(y - 50);
     mine[curY][curX] = "⚪";
     curX = x;
     curY = y;
     checkAllAround(curX, curY, 1);
     mine[curY][curX] = "⛏️"; 
-    
-    setTimeout(() => {
-    resolve(true);
-    }, 1000);
-    });
 }
 let distanceMulti = 1;
 function switchDistance() {
