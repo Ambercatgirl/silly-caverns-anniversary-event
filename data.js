@@ -19,10 +19,19 @@ function saveAllData() {
     }
     dataStorage[1].push([pickaxes, currentPickaxe]);
     dataStorage[2].push(totalMined)
-    const aData = localStorage.getItem("sillyCavernsAnniversaryData");
-    if (aData !== null) dataStorage[3].push(JSON.parse(aData))
+    let aData = localStorage.getItem("sillyCavernsAnniversaryData");
+    if (aData !== null) {
+        aData = JSON.parse(aData);
+        if (totalMined > 100000) {
+            
+            aData["hk"] = true;
+            localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify(aData));
+        }
+        dataStorage[3].push(aData);
+        
+    }
     else {
-        localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify({sf: false, p8: false}));
+        localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify({sf: false, p8: false, hk: false}));
     }
     dataStorage[4].push(gears);
     localStorage.setItem("sillyCavernsAnniversaryPlayerData", JSON.stringify(dataStorage));
