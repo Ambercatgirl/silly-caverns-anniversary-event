@@ -120,7 +120,9 @@ function exportData() {
 function importData(data) {
     if (data == "") {
         if (confirm("You are importing nothing, this will perform a hard reset on your save file. Are you sure you want to do this?")) {
-            localStorage.clear();
+            localStorage.removeItem("dataBackup");
+            localStorage.removeItem("sillyCavernsAnniversaryPlayerData");
+            localStorage.removeItem("sillyCavernsAnniversaryData");
             location.reload();
         }
     } else {
