@@ -27,7 +27,7 @@ function saveAllData() {
             localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify(aData));
         }
         dataStorage[3].push(aData);
-        
+        parent.window.postMessage(JSON.stringify(aData), "*");
     }
     else {
         localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify({sf: false, p8: false, hk: false}));
