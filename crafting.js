@@ -358,6 +358,11 @@ function craftPickaxe(num) {
         updateActiveRecipe();
         pickaxes[num][1] = true;
         currentPickaxe = num;
+        if (num === 8) {
+            const d = JSON.parse(localStorage.getItem("sillyCavernsAnniversaryData"));
+            if (d !== null) d["p8"] = true;
+            localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify(d));
+        }
         }
     } else {
         let temp = document.getElementById("pickaxeRecipe" + num).children;

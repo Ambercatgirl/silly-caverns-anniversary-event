@@ -809,7 +809,6 @@ function giveBlock(type, x, y, fromReset) {
         oreList[block][1][0]++;
         updateInventory(block, 1);
     }
-    
     if (type != "⛏️") {
         inv = 1;
         if (type == "🟩") {
@@ -826,6 +825,11 @@ function giveBlock(type, x, y, fromReset) {
                 verifiedOres.verifyFind(mine[y][x], y, x, names[inv - 1]);
             }
             if (Math.round(1/oreList[type][0]) >= 750000) {
+                if (Math.round(1/oreList[type][0]) >= 5000000000) {
+                    const d = JSON.parse(localStorage.getItem("sillyCavernsAnniversaryData"));
+                    if (d !== null) d["sf"] = true;
+                    localStorage.setItem("sillyCavernsAnniversaryData", JSON.stringify(d));
+                }
                 if (currentPickaxe >= 7) {
                     if (Math.round(1/oreList[type][0]) > 2000000) {
                         logFind(type, x, y, names[inv - 1], totalMined, fromReset);
