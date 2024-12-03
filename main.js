@@ -757,6 +757,7 @@ function displayArea() {
                     verifiedOres.verifyLog(y, x-1);
                 }
                 blocksRevealedThisReset++;
+                if (gears[3] && oreList[generated[0]][0] < 1/749999) mineBlock(x-1, y, "ability", 1) 
             }
         }
         if (mine[y][x + 1] === undefined) {
@@ -766,6 +767,7 @@ function displayArea() {
                     verifiedOres.verifyLog(y, x+1);
                 }
                 blocksRevealedThisReset++;
+                if (gears[3] && oreList[generated[0]][0] < 1/749999) mineBlock(x+1, y, "ability", 1) 
         }
         mine[y + 1] ??= [];
         if (mine[y + 1][x] === undefined) {
@@ -775,6 +777,7 @@ function displayArea() {
                     verifiedOres.verifyLog(y+1, x);
                 }
                 blocksRevealedThisReset++;
+                if (gears[3] && oreList[generated[0]][0] < 1/749999) mineBlock(x, y+1, "ability", 1) 
             }
             mine[y - 1] ??= [];
         if (y - 1 >= 0) {
